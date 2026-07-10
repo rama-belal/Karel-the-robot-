@@ -2,3 +2,5 @@ out/
 .idea/
 _MACOSX/
 *.class
+.DS_Store
+karel.jar
