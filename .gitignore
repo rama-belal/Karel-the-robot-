@@ -4,3 +4,4 @@ _MACOSX/
 *.class
 .DS_Store
 karel.jar
+*.iml
