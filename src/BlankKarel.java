@@ -84,9 +84,41 @@ public class BlankKarel extends SuperKarel {
         beeper();
     }
 
+    public void evenWidthOddHeight(int h )//case 3 --> even width odd height --> one vertical line of beepers
+    {
+
+        int point = h/2;
+        turnLeft();
+        for(int i=0 ; i<point;i++)
+        {
+            move();
+        }
+        if(noBeepersPresent())
+            putBeeper();
+        turnRight();
+        beeper();
+    }
+
+    public void oddWidthEvenHeight(int w)//working
+    {
+        int point = w/2;
+        for(int i=0 ; i<point;i++)
+        {
+            move();
+        }
+        if(noBeepersPresent())
+            putBeeper();
+        turnLeft();
+        beeper();
+
+    }
+
     public void run() {
        int width = getWidth();
        int height =getHeight();
+
+        System.out.println("width = " + width);
+        System.out.println("height = " + height);
 
        if(width==2&&height==2)
            System.out.println("karel cant divide the map");
@@ -99,5 +131,11 @@ public class BlankKarel extends SuperKarel {
 
        else if(width%2!=0 && height%2!=0)
            oddWidthOddHeight(width, height);
+
+       else if(height%2!=0 && width%2==0)
+           evenWidthOddHeight(height);
+
+       else if(width%2!=0 && height%2==0)
+           oddWidthEvenHeight(width);
     }
 }
