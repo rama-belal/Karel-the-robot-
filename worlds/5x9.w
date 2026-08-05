@@ -1,5 +1,5 @@
-Dimension: (7, 1)
+Dimension: (9, 5)
 Karel: (1, 1) east
 
 BeeperBag: INFINITE
-Speed: 0.86
+Speed: 0.40
