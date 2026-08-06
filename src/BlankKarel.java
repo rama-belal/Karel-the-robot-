@@ -17,14 +17,6 @@ public class BlankKarel extends SuperKarel {
         turnLeft();
         return height;}
 
-   /* public void keepMovingWithBeepers(){
-        while (frontIsClear()) {
-            move();
-            if(noBeepersPresent()) {
-                putBeeper();}
-        }
-    }*/
-
     public void keepMoving(){
         while (frontIsClear()) move();
     }
@@ -55,21 +47,25 @@ public class BlankKarel extends SuperKarel {
     }
 
     public void drawLines(int point, int beepers) {
+
+
         int[] segments = getSegments(point, beepers);
         for (int steps : segments) {
             for (int i = 0; i < steps; i++) {
                 move();
             }
-            if (noBeepersPresent()) putBeeper();
+            if (noBeepersPresent()) {
+                putBeeper();
+            }
         }
     }
 
     private int[] getSegments(int point, int beepers) {
         switch (beepers) {
-            case 3: return new int[]{point, point + 1, point + 1};
-            case 4: return new int[]{point - 1, point, point, point};
-            case 5: return new int[]{0, point, point, point, point};
-            case 6: return new int[]{point, 1, point + 1, 1, point + 1, 1};
+            case 3: return new int[]{point, point + 1, point + 1};                    // dashed line without edge beeper
+            case 4: return new int[]{point - 1, point, point, point};                // dashed line without edge beeper
+            case 5: return new int[]{0, point, point, point, point};                // dashed line with edge beeper
+            case 6: return new int[]{point, 1, point + 1, 1, point + 1, 1};        // double lines
             default: return new int[]{};
         }
     }
@@ -289,6 +285,69 @@ public class BlankKarel extends SuperKarel {
         }
     }
 
+    public void moveToPoint(int point){
+        for(int i=0 ; i<point;i++){
+            move();}
+        if(noBeepersPresent()) putBeeper();
+
+    }
+
+    public void keepMovingWithBeepers(){
+        while (frontIsClear()) {
+            moveAndPlaceBeeper();
+        }
+    }
+
+    public void drawVerticalLines( boolean doubleLines , int point) {
+
+        moveToPoint(point);
+        turnLeft();
+        keepMovingWithBeepers();
+
+        if(doubleLines){
+            turnLeft();move();turnLeft();
+
+            if(noBeepersPresent()) putBeeper();
+            keepMovingWithBeepers();
+        }
+    }
+    public void drawHorizontalLines(boolean doubleLines , int point){
+
+        turnLeft();keepMoving();turnLeft();
+        moveToPoint(point);
+        turnLeft();
+        keepMovingWithBeepers();
+
+        if(doubleLines){
+
+            turnLeft(); move();turnLeft();
+
+            if(noBeepersPresent()) putBeeper();
+            keepMovingWithBeepers();
+        }
+    }
+
+    public void drawPlusSign(int w , int h){
+
+        if(h%2 !=0 && w%2 !=0 ) {
+            drawVerticalLines(false,w/2);
+            drawHorizontalLines(false,h/2);
+        }
+        else if(h%2 ==0 && w%2 ==0){
+            drawVerticalLines(true,w/2);
+            drawHorizontalLines(true,h/2);
+        }
+        else if (h%2!=0 && w%2==0){
+            drawVerticalLines(true,w/2);
+            drawHorizontalLines(false,h/2);
+        }
+        else if(h%2==0 && w%2!=0){
+            drawVerticalLines(false,w/2);
+            drawHorizontalLines(true,h/2);
+        }
+    }
+
+
     public void select(int w , int h ) {
 
         if(w==1&&h==1) System.out.println("karel cant divide the map");
@@ -311,6 +370,10 @@ public class BlankKarel extends SuperKarel {
 
         else if(h==2) heightOrWidthEqualsTwo(w,true);  //heightEqualsTwo(w);  // 2xN cases
         else if(w==2) heightOrWidthEqualsTwo(h,false); //widthEqualsTwo(h);   // Nx2 cases
+
+        else if(h>2 && w>2) drawPlusSign(w , h ) ;
+
+
     }
     public void run() {
        int width = getWidth();
