@@ -429,13 +429,21 @@ public class BlankKarel extends SuperKarel {
 
         beepersNeededForHorizontalLines=horizontalLines(w , h );
 
-        if(beepersNeededForVerticalLines<beepersNeededForHorizontalLines){
+        /*if(beepersNeededForVerticalLines<beepersNeededForHorizontalLines){
             drawVerticalLines(w,h);
         }
         else if(beepersNeededForHorizontalLines<beepersNeededForVerticalLines){
             drawHorizontalLines(w,h);
         }
-        else drawPlusSign(w,h);
+        else drawPlusSign(w,h);*/
+
+        if (plusSignBeepers < beepersNeededForVerticalLines && plusSignBeepers < beepersNeededForHorizontalLines) {
+            drawPlusSign(w, h);
+        } else if (beepersNeededForVerticalLines <= beepersNeededForHorizontalLines) {
+            drawVerticalLines(w, h);
+        } else {
+            drawHorizontalLines(w, h);
+        }
 
     }
     public void select(int w , int h ) {
@@ -474,4 +482,3 @@ public class BlankKarel extends SuperKarel {
         select(width,height);
     }
 }
-
