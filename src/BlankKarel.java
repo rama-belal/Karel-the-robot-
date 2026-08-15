@@ -52,7 +52,7 @@ public class BlankKarel extends SuperKarel {
         int[] segments = getSegments(point, beepers);
         for (int steps : segments) {
             for (int i = 0; i < steps; i++) {
-                move();
+               if(frontIsClear()) move();
             }
             if (noBeepersPresent()) {
                 putBeeper();
@@ -73,7 +73,7 @@ public class BlankKarel extends SuperKarel {
     public void dashedLineWithoutEdgeBeeper() {
         while(frontIsClear()) {
          moveAndPlaceBeeper();
-         move();
+         if(frontIsClear()) move();
         }
     }
 
@@ -347,7 +347,7 @@ public class BlankKarel extends SuperKarel {
         }
     }
 
-    public int verticalLines(int w , int h){
+    public int verticalLinesBeepers(int w , int h){
 
         if(w%4==0){return 4*h;}
         else if(w%4==1){return 5*h;}
@@ -355,7 +355,7 @@ public class BlankKarel extends SuperKarel {
         else return 3*h; //w%4==3
     }
 
-    public int horizontalLines(int w , int h){
+    public int horizontalLinesBeepers(int w , int h){
 
         if(h%4==0){return 4*w;}
         else if(h%4==1){return 5*w;}
@@ -373,25 +373,42 @@ public class BlankKarel extends SuperKarel {
             else if(w%4==1)  drawLines(w/4 , 5);     // dashed line with edge beeper
 
             h--;
-            turnLeft();turnRight();while (frontIsClear()) move();
+            while (frontIsClear()) move();
 
+            if(w%4==0){
             turnAround(); while (frontIsClear())move();
-            turnRight();move();turnRight();
+            turnRight();
+            move();
+            turnRight();}
+
+           else{
+            turnLeft();
+                move();
+            turnLeft();}
+
 
             if(w%4==3)       drawLines(w/4 ,3);         // dashed line without edge beeper
             else if(w%4==0)  drawLines(w/4 ,4);        // dashed line without edge beeper
             else if(w%4==2)  drawLines((w-6)/4 , 6);  // double lines
             else if(w%4==1)  drawLines(w/4 , 5);     // dashed line with edge beeper
 
+            while (frontIsClear()) move();
+
+            if(w%4==0){
             turnAround(); while (frontIsClear())move();
-            turnRight();move();turnRight();
+            turnRight();move();turnRight();}
+
+            else{
+            turnRight();
+            move();
+            turnRight();}
 
             h--;
         }
     }
     public void drawHorizontalLines(int w , int h ) {
 
-            while (w != 0) {
+            while (w >0 ) {
 
                 turnLeft();
 
@@ -401,7 +418,16 @@ public class BlankKarel extends SuperKarel {
                 else if(h%4==1)  drawLines(h/4 , 5);     // dashed line with edge beeper
 
                 w--; while (frontIsClear()) move();
-                turnRight();move();turnRight();
+
+                if(h%4==0){
+                    turnAround(); while (frontIsClear())move();
+                    turnLeft();move();turnLeft();}
+
+               else{
+                    turnRight();
+                     move();
+                    turnRight();
+                }
 
                 if(h%4==3)       drawLines(h/4 ,3);         // dashed line without edge beeper
                 else if(h%4==0)  drawLines(h/4 ,4);        // dashed line without edge beeper
@@ -409,7 +435,14 @@ public class BlankKarel extends SuperKarel {
                 else if(h%4==1)  drawLines(h/4 , 5);     // dashed line with edge beeper
 
                 while (frontIsClear()) move();
-                turnLeft();move();
+
+                if(h%4==0){
+                    turnAround(); while (frontIsClear())move();
+                    turnLeft();move();}
+
+                else{
+                    turnLeft();move();}
+
                 w--;
             }
     }
@@ -417,25 +450,17 @@ public class BlankKarel extends SuperKarel {
     public void decideBasedOnBeepersNumber(int w , int h) { // for h>2 and c>2 cases
 
         int plusSignBeepers =0 ;
-        int beepersNeededForVerticalLines=0 ;   // based on width
-        int beepersNeededForHorizontalLines=0;  //based on height
+        int beepersNeededForVerticalLines=0 ;   // based on width ,  move and divide horizontally
+        int beepersNeededForHorizontalLines=0;  // based on height , move and divide vertically
 
         if(h%2 !=0 && w%2 !=0 )     { plusSignBeepers=(h+w)-1;}
         else if(h%2 ==0 && w%2==0 ) { plusSignBeepers=(2*h+2*w)-4;}
         else if(h%2!=0 && w%2==0 )  { plusSignBeepers=(h+w)+(h-2);} //15x10
         else if(h%2==0 && w%2!=0 )   {plusSignBeepers=(h+w)+(w-2);}
 
-        beepersNeededForVerticalLines=verticalLines(w , h );
+        beepersNeededForVerticalLines=verticalLinesBeepers(w , h );
 
-        beepersNeededForHorizontalLines=horizontalLines(w , h );
-
-        /*if(beepersNeededForVerticalLines<beepersNeededForHorizontalLines){
-            drawVerticalLines(w,h);
-        }
-        else if(beepersNeededForHorizontalLines<beepersNeededForVerticalLines){
-            drawHorizontalLines(w,h);
-        }
-        else drawPlusSign(w,h);*/
+        beepersNeededForHorizontalLines=horizontalLinesBeepers(w , h );
 
         if (plusSignBeepers < beepersNeededForVerticalLines && plusSignBeepers < beepersNeededForHorizontalLines) {
             drawPlusSign(w, h);
