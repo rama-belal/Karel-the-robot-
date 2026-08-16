@@ -77,18 +77,23 @@ public class BlankKarel extends SuperKarel {
         }
     }
 
+    public void selectLinePattern(int dimension){
+
+        if(dimension%4==3)       drawLines(dimension/4 ,3);         // dashed line without edge beeper
+        else if(dimension%4==0)  drawLines(dimension/4 ,4);        // dashed line without edge beeper
+        else if(dimension%4==2)  drawLines((dimension-6)/4 , 6);  // double lines
+        else if(dimension%4==1)  drawLines(dimension/4 , 5);     // dashed line with edge beeper
+
+    }
+
     public void heightOrWidthLessThan2(int dimension){
 
         if(dimension<=7){
             dashedLineWithoutEdgeBeeper ();}
         else if (dimension>7) {
 
-            if(dimension%4==3)       drawLines(dimension/4 ,3);         // dashed line without edge beeper
-            else if(dimension%4==0)  drawLines(dimension/4 ,4);        // dashed line without edge beeper
-            else if(dimension%4==2)  drawLines((dimension-6)/4 , 6);  // double lines
-            else if(dimension%4==1)  drawLines(dimension/4 , 5);     // dashed line with edge beeper
+            selectLinePattern(dimension);
         }
-
     }
 
     public void placeBeeper(){
@@ -287,7 +292,7 @@ public class BlankKarel extends SuperKarel {
 
     public void moveToPoint(int point){
         for(int i=0 ; i<point;i++){
-            move();}
+            if(frontIsClear()) move();}
         if(noBeepersPresent()) putBeeper();
 
     }
@@ -311,6 +316,7 @@ public class BlankKarel extends SuperKarel {
             keepMovingWithBeepers();
         }
     }
+
     public void drawHorizontalLines(boolean doubleLines , int point){
 
         turnLeft();keepMoving();turnLeft();
@@ -326,7 +332,6 @@ public class BlankKarel extends SuperKarel {
             keepMovingWithBeepers();
         }
     }
-
     public void drawPlusSign(int w , int h ){
 
         if(h%2 !=0 && w%2 !=0 ) {
@@ -363,88 +368,67 @@ public class BlankKarel extends SuperKarel {
         else return 3*w; //h%4==3
     }
 
-    public void drawVerticalLines(int w , int h ){
+    public void drawVerticaOrHorizontalLines(int repeatCount, int patternDimension, boolean isVertical ){
 
-        while(h!=0){
+        while(repeatCount>0){
 
-            if(w%4==3)       drawLines(w/4 ,3);         // dashed line without edge beeper
-            else if(w%4==0)  drawLines(w/4 ,4);        // dashed line without edge beeper
-            else if(w%4==2)  drawLines((w-6)/4 , 6);  // double lines
-            else if(w%4==1)  drawLines(w/4 , 5);     // dashed line with edge beeper
+            if(! isVertical) { turnLeft();}
 
-            h--;
+            selectLinePattern(patternDimension);
+            repeatCount--;
             while (frontIsClear()) move();
 
-            if(w%4==0){
-            turnAround(); while (frontIsClear())move();
-            turnRight();
-            move();
-            turnRight();}
-
-           else{
-            turnLeft();
-                move();
-            turnLeft();}
-
-
-            if(w%4==3)       drawLines(w/4 ,3);         // dashed line without edge beeper
-            else if(w%4==0)  drawLines(w/4 ,4);        // dashed line without edge beeper
-            else if(w%4==2)  drawLines((w-6)/4 , 6);  // double lines
-            else if(w%4==1)  drawLines(w/4 , 5);     // dashed line with edge beeper
-
-            while (frontIsClear()) move();
-
-            if(w%4==0){
-            turnAround(); while (frontIsClear())move();
-            turnRight();move();turnRight();}
-
-            else{
-            turnRight();
-            move();
-            turnRight();}
-
-            h--;
-        }
-    }
-    public void drawHorizontalLines(int w , int h ) {
-
-            while (w >0 ) {
-
-                turnLeft();
-
-                if(h%4==3)       drawLines(h/4 ,3);         // dashed line without edge beeper
-                else if(h%4==0)  drawLines(h/4 ,4);        // dashed line without edge beeper
-                else if(h%4==2)  drawLines((h-6)/4 , 6);  // double lines
-                else if(h%4==1)  drawLines(h/4 , 5);     // dashed line with edge beeper
-
-                w--; while (frontIsClear()) move();
-
-                if(h%4==0){
-                    turnAround(); while (frontIsClear())move();
-                    turnLeft();move();turnLeft();}
-
-               else{
-                    turnRight();
-                     move();
-                    turnRight();
-                }
-
-                if(h%4==3)       drawLines(h/4 ,3);         // dashed line without edge beeper
-                else if(h%4==0)  drawLines(h/4 ,4);        // dashed line without edge beeper
-                else if(h%4==2)  drawLines((h-6)/4 , 6);  // double lines
-                else if(h%4==1)  drawLines(h/4 , 5);     // dashed line with edge beeper
-
+            if(patternDimension%4==0){
+                turnAround();
                 while (frontIsClear()) move();
 
-                if(h%4==0){
-                    turnAround(); while (frontIsClear())move();
-                    turnLeft();move();}
+                if(!isVertical) {turnLeft();}
+                else {turnRight();}
 
-                else{
-                    turnLeft();move();}
+                if(frontIsClear()) move();
 
-                w--;
-            }
+                if(!isVertical) {turnLeft();}
+                else {turnRight();}
+         }
+
+           else{
+               if(!isVertical) { turnRight();}
+               else {turnLeft();}
+
+               if(frontIsClear()) move();
+
+               if(!isVertical) {turnRight();}
+               else {turnLeft();}
+           }
+
+            selectLinePattern(patternDimension);
+
+            while (frontIsClear()) move();
+
+            if(patternDimension%4==0){
+            turnAround();
+            while (frontIsClear())move();
+
+            if(!isVertical) {turnLeft();}
+            else {turnRight();}
+
+            if(frontIsClear()) move();
+
+            if(isVertical) {turnRight();}
+
+          }
+
+            else{
+                if(!isVertical) {turnLeft();}
+                else {turnRight();}
+
+                if(frontIsClear()) move();
+
+                if(isVertical) {turnRight();}
+          }
+
+            repeatCount--;
+        }
     }
 
     public void decideBasedOnBeepersNumber(int w , int h) { // for h>2 and c>2 cases
@@ -462,15 +446,15 @@ public class BlankKarel extends SuperKarel {
 
         beepersNeededForHorizontalLines=horizontalLinesBeepers(w , h );
 
-        if (plusSignBeepers < beepersNeededForVerticalLines && plusSignBeepers < beepersNeededForHorizontalLines) {
+        if (plusSignBeepers <= beepersNeededForVerticalLines && plusSignBeepers <= beepersNeededForHorizontalLines) {
             drawPlusSign(w, h);
         } else if (beepersNeededForVerticalLines <= beepersNeededForHorizontalLines) {
-            drawVerticalLines(w, h);
+            drawVerticaOrHorizontalLines(h,w,true);
         } else {
-            drawHorizontalLines(w, h);
+            drawVerticaOrHorizontalLines(w,h,false);
         }
-
     }
+
     public void select(int w , int h ) {
 
         if(w==1&&h==1) System.out.println("karel cant divide the map");
@@ -491,12 +475,13 @@ public class BlankKarel extends SuperKarel {
             heightOrWidthLessThan2(h);   // Nx1 cases
         }
 
-        else if(h==2) heightOrWidthEqualsTwo(w,true);  //heightEqualsTwo(w);  // 2xN cases
-        else if(w==2) heightOrWidthEqualsTwo(h,false); //widthEqualsTwo(h);   // Nx2 cases
+        else if(h==2) heightOrWidthEqualsTwo(w,true);    // 2xN cases
+        else if(w==2) heightOrWidthEqualsTwo(h,false);  // Nx2 cases
 
-        else if(h>2 && w>2) decideBasedOnBeepersNumber(w,h);// drawPlusSign(w , h ) ;
+        else if(h>2 && w>2) decideBasedOnBeepersNumber(w,h);
 
     }
+
     public void run() {
        int width = getWidth();
        int height =getHeight();
